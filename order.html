@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order || Oniko Medical Trading</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <a href="./index.html"><img src="images/logo.png" width="85px"></a>
+            </div>
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./products.html">Products</a></li>
+                    <li><a href="./contacts.html">Contacts</a></li> 
+                </ul>
+            </nav>
+            <img src="images/cart.png" width="30px" height="30px">
+            <img src="images/ui_menu_icon_.png" class="menu-icon" onclick="menutoggle()">
+        </div>
+    </div>
+
+    <div class="small-container">
+        <h2>Your Cart</h2>
+        <div id="cart-items" class="cart-items">
+            <!-- Cart items will be displayed here -->
+        </div>
+        <div class="cart-total">
+            <h3>Total: <span id="cart-total">Php 0.00</span></h3>
+            <button class="btn" onclick="clearCart()">Clear your Cart</button>
+            <button class="btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+            <button class="btn" onclick="buyMore()">Buy more items?</button> 
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col-1">
+                    <img src="images/logo_white.png">
+                    <p style="text-align: center;"> Our Purpose Is to Sustainably Make the Benefit of Medical Supplies Accessible to Many</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Function to display cart items
+    function displayCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalElement = document.getElementById('cart-total');
+        let total = 0;
+
+        cartItemsContainer.innerHTML = ''; // Clear existing items
+
+        cart.forEach(item => {
+            // Create product row
+            const productRow = document.createElement('div');
+            productRow.classList.add('cart-item');
+
+            // Add product image, name, price, and quantity to the row
+            productRow.innerHTML = `
+                <div class="cart-item-image">
+                    <img src="${item.image}" alt="${item.name}" width="100px">
+                </div>
+                <div class="cart-item-details">
+                    <p><strong>${item.name}</strong></p>
+                    <p>Price: Php ${item.price.toFixed(2)}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                </div>
+                <div class="cart-item-remove">
+                    <button onclick="removeFromCart('${item.name}', ${item.price})">Remove</button>
+                </div>
+            `;
+            
+            // Append product row to cart
+            cartItemsContainer.appendChild(productRow);
+
+            // Update total price
+            total += item.price * item.quantity;
+        });
+
+        // Update total price in the UI
+        cartTotalElement.textContent = `Php ${total.toFixed(2)}`;
+    }
+
+    // Function to remove item from cart
+    function removeFromCart(name, price) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = cart.filter(item => item.name !== name || item.price !== price); // Filter out the removed item
+        localStorage.setItem('cart', JSON.stringify(cart)); // Save the updated cart
+        displayCart(); // Re-display the updated cart
+    }
+
+    // Function to clear the cart
+    function clearCart() {
+        localStorage.removeItem('cart');
+        displayCart();
+    }
+
+    // Function to proceed to checkout
+    function proceedToCheckout() {
+        // Implement checkout functionality
+        alert('Proceeding to Checkout!');
+    }
+
+    // Function to buy more items
+    function buyMore() {
+        window.location.href = './products.html'; // Redirect to the products page
+    }
+
+    // Display cart on page load
+    window.onload = displayCart;
+    </script>
+
+    <style>
+    /* Style the cart container */
+    .small-container {
+        padding: 40px;
+        margin-top: 50px;
+    }
+
+    .cart-items {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
+    }
+
+    .cart-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item-image img {
+        max-width: 100px;
+        border-radius: 8px;
+    }
+
+    .cart-item-details {
+        flex-grow: 1;
+        margin-left: 20px;
+    }
+
+    .cart-item-remove button {
+        padding: 10px 20px;
+        background-color: #f44336;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .cart-item-remove button:hover {
+        background-color: #d32f2f;
+    }
+
+    .cart-total {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-total button {
+        padding: 12px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .cart-total button:hover {
+        background-color: #45a049;
+    }
+
+    .btn {
+        margin-top: 20px;
+        padding: 12px 20px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    </style>
+</body>
+</html>
